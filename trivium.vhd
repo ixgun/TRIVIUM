@@ -5,15 +5,15 @@ use IEEE.NUMERIC_STD.ALL;
 entity trivium is
 	Generic (
 		-- Keystream output width: 1,2,4,8,16,32,64
-		KSOUT_WIDTH : integer	:= 8
+	KSOUT_WIDTH : integer	:= 8
 		  
 		-- Keystream output Endianness: (Optional, default endianness is little endian)
 		-- little endian 0, big endian 1
-		--KSOUT_ENDIAN : integer := 0
+	--KSOUT_ENDIAN : integer := 0
 	);
     Port ( 
 		--TRIVIUM Key
-		key : in  STD_LOGIC_VECTOR (79 downto 0);
+	key : in  STD_LOGIC_VECTOR (79 downto 0);
 		
 		--TRIVIUM Initial Vector
         iv : in  STD_LOGIC_VECTOR (79 downto 0);
@@ -22,7 +22,7 @@ entity trivium is
         clk : in  STD_LOGIC;
 		
 		--Return next keystream word on the next cycle, active high
-		nxt : in STD_LOGIC;
+	nxt : in STD_LOGIC;
 		
 		--Reset
         rst : in  STD_LOGIC;
@@ -41,24 +41,24 @@ architecture Behavioral of trivium is
 signal ei  : STD_LOGIC_VECTOR (287 downto 0);
 
 -- Generated bits to be shifted into the internal 
--- state register after each cicle
+-- state register after each cycle
 signal a1,a2,a3 : STD_LOGIC_VECTOR (KSOUT_WIDTH-1 downto 0);
 
--- Mode:
+-- State:
 -- 00 - Reset, Internal State initialize
 -- 01 - Internal State initialization, let 'y' cycles pass
 -- 11 - Initialized, generating valid keystream
 signal modo : STD_LOGIC_VECTOR(1 downto 0);
 
--- 'y' counter for Mode
--- 36 cicles must take place for the initialization to finish
+-- 'y' counter for State 01
+-- 1152/KSOUT_WIDTH cicles must take place for the initialization to finish
 signal y : integer range 0 to (1152/KSOUT_WIDTH);
 
 -- generated keystream
 signal z : STD_LOGIC_VECTOR (KSOUT_WIDTH-1 downto 0);
 
 --auxiliary signal to generate a keystream word only when
---needed (when next=1) after the initialization is finished
+--indicated (when next=1) after the initialization is finished
 signal sclk : STD_LOGIC;
 
 --Ready signal
@@ -88,11 +88,11 @@ end process control1;
 
 rdy <= srdy;
 
---this defines the clock that controls
---keystream generation, clock signal will
---be left untouched while initialization 
---takes place and then it will only update
---the keystream when nxt=1
+--this defines the auxiliary clock signal 
+--that controls keystream generation, 
+--clock signal will be left untouched while
+--initialization takes place and then it 
+--will only update the keystream when nxt=1
 
 --|clk|rdy|nxt||sclk|
 --+---+---+---++----+
