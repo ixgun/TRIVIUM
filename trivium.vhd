@@ -6,10 +6,6 @@ entity trivium is
 	Generic (
 		-- Keystream output width: 1,2,4,8,16,32,64
 	KSOUT_WIDTH : integer	:= 8
-		  
-		-- Keystream output Endianness: (Optional, default endianness is little endian)
-		-- little endian 0, big endian 1
-	--KSOUT_ENDIAN : integer := 0
 	);
     Port ( 
 		--TRIVIUM Key
@@ -155,7 +151,7 @@ end process trivium1;
 
 g_z: for ii in 0 to KSOUT_WIDTH-1 generate
 	--To change endianness uncomment the next line and comment the line below it
-	--z(((0-(KSOUT_WIDTH-1))+ii)*(-1+2*(KSOUT_ENDIAN))+(KSOUT_ENDIAN*(KSOUT_WIDTH-1))) <= (ei(65-ii) xor ei(92-ii)) xor (ei(161-ii) xor ei(176-ii)) xor (ei(242-ii) xor ei(287-ii));
+	--z((KSOUT_WIDTH-1)-ii)<= (ei(65-ii) xor ei(92-ii)) xor (ei(161-ii) xor ei(176-ii)) xor (ei(242-ii) xor ei(287-ii));
 	z(ii) <= (ei(65-ii) xor ei(92-ii)) xor (ei(161-ii) xor ei(176-ii)) xor (ei(242-ii) xor ei(287-ii)); 
 end generate g_z;
 
